@@ -46,7 +46,7 @@
                     echo '</table>';
                 }
             } else {
-                echo('<a href="logout.php">Logout</a>');
+                echo('<a href="logout.php">Logout</a></br>');
                 if (count($rows) > 0) {
                     echo('<div>');
                     echo('<table border="1">');
