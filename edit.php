@@ -16,11 +16,11 @@
     if (isset($_POST['first_name']) && isset($_POST['last_name']) && isset($_POST['email']) && isset($_POST['headline']) && isset($_POST['summary'])) {
         if (strlen($_POST['first_name']) < 1 || strlen($_POST['last_name']) < 1 || strlen($_POST['email']) < 1 || strlen($_POST['headline']) < 1 || strlen($_POST['summary']) < 1) {
             $_SESSION['error'] = "All fields are required";
-            header("Location: add.php");
+            header("Location: edit.php?profile_id=".$_POST['profile_id']);
             return;
         } else if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
             $_SESSION['error'] = "Email address must contain @";
-            header("Location: add.php");
+            header("Location: edit.php?profile_id=".$_POST['profile_id']);
             return;
         } else {
             //Posting new user to DB

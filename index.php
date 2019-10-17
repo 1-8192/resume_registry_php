@@ -27,7 +27,7 @@
             }
 
             //dislplays log in or logout depending on current sessions as well as table info
-            if (!$_SESSION['name']) {
+            if (!isset($_SESSION["name"])) {
                 echo('<a href="login.php">Please log in</a>');
                 if (count($rows) > 0) {
                     echo('<div>');
@@ -57,7 +57,7 @@
                         echo('</tr>');
                         foreach($rows as $row) {
                             echo'<tr><td>';
-                            echo($row['first_name']. $row['last_name']);
+                            echo($row['first_name']." ". $row['last_name']);
                             echo '</td><td>';
                             echo($row["headline"]);
                             echo '</td><td>';
