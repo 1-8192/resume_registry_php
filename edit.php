@@ -24,22 +24,40 @@
             return;
         } else {
             //Posting new user to DB
-            $stmt = $pdo->prepare('INSERT INTO Profile
-            (user_id, first_name, last_name, email, headline, summary)
-            VALUES ( :uid, :fn, :ln, :em, :he, :su)');
-          
+            $stmt = $pdo->prepare('UPDATE Profile SET user_id = :uid, first_name = :fn, last_name = :ln, email = :em, headline = :he, summary = :su WHERE profile_id = :pid');
+
             $stmt->execute(array(
             ':uid' => $_SESSION['user_id'],
             ':fn' => $_POST['first_name'],
             ':ln' => $_POST['last_name'],
             ':em' => $_POST['email'],
             ':he' => $_POST['headline'],
-            ':su' => $_POST['summary'])
-          );
-          $_SESSION['success'] = "Profile added";
+            ':su' => $_POST['summary'],
+            ':pid' => htmlentities($_POST['profile_id'])
+          ));
+          $_SESSION['success'] = "Profile saved";
           header("Location: index.php");
           return;
         }
+    }
+
+    //Getting data for user to edit from db
+    $stmt = $pdo->prepare("SELECT * FROM Profile WHERE profile_id = :id");
+    $stmt->execute(array(":id" => $_GET['profile_id']));
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+    //making sure we're getting back an answer
+    if ($row === false) {
+        $_SESSION['error'] = "Bad value for profile id";
+        header("Location: index.php");
+        return;
+    } else {
+        $first_name = htmlentities($row['first_name']);
+        $last_name = htmlentities($row['last_name']);
+        $email = htmlentities($row['email']);
+        $headline = htmlentities($row['headline']);
+        $summary = htmlentities($row['summary']);
+        $profile_id = htmlentities($row['profile_id']);
     }
 ?>
 
@@ -60,16 +78,17 @@
         ?>
         <form method="POST">
             <label for="first_name">First Name:</label>
-            <input type="text" name="first_name" size="60"></br>
+            <input type="text" name="first_name" size="60" value="<?= $first_name ?>"></br>
             <label for="last_name">Last Name:</label>
-            <input type="text" name="last_name" size="60"></br>
+            <input type="text" name="last_name" size="60" value="<?= $last_name ?>"></br>
             <label for="email">Email:</label>
-            <input type="text" name="email" size="30"></br>
+            <input type="text" name="email" size="30" value="<?= $email ?>"></br>
             <label for="headline">Headline:</label>
-            <input type="text" name="headline" size="80"></br>
+            <input type="text" name="headline" size="80" value="<?= $headline ?>"></br>
             <label for="summary">Summary:</label>
-            <textarea name="summary" rows="8" cols="80"></textarea></br>
-            <input type="submit" value="Add">
+            <textarea name="summary" rows="8" cols="80"><?= $summary ?></textarea></br>
+            <input type="hidden" name="profile_id" value="<?= $profile_id?>">
+            <input type="submit" value="Save">
             <input type="submit" name="cancel" value="Cancel">
         </form>
     </body>
