@@ -56,9 +56,25 @@
         <?php require_once 'bootstrap_styling.php' ?>
     </head>
     <body>
+        <h1>Please Log In</h1>
+        <?php 
+            //checking to see if there is an error in session and if there is displays it and unsets the error for another try
+            if (isset($_SESSION['error'])) {
+                echo('<p style="color: red;">'.htmlentities($_SESSION['error'])."</p>\n");
+                unset($_SESSION['error']);
+            }
+        ?>
+        <form method="POST">
+            <label for="email">Email</label>
+            <input type="text" name="email" id="email">
+            <label for="pass">Password</label>
+            <input type="text" name="pass" id="pass">
+            <input type="submit" onclick="return validateLog();" value="Log In">
+            <input type="submit" name="cancel" value="Cancel">
+        </form>
         <script>
             //JS validation for input fields
-            function doValidate() {
+            function validateLog() {
                 console.log('Validating...');
                 const em = document.getElementById('email').value;
                 const pw = document.getElementById('pass').value;
@@ -79,21 +95,5 @@
                 return false;
             }
         </script>
-        <h1>Please Log In</h1>
-        <?php 
-            //checking to see if there is an error in session and if there is displays it and unsets the error for another try
-            if (isset($_SESSION['error'])) {
-                echo('<p style="color: red;">'.htmlentities($_SESSION['error'])."</p>\n");
-                unset($_SESSION['error']);
-            }
-        ?>
-        <form method="POST">
-            <label for="email">Email</label>
-            <input type="text" name="email" id="email">
-            <label for="pass">Password</label>
-            <input type="text" name="pass" id="pass">
-            <input type="submit" onclick="return doValidate();" value="Log In">
-            <input type="submit" name="cancel" value="Cancel">
-        </form>
     </body>
 </html>

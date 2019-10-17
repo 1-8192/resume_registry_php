@@ -2,7 +2,11 @@
     session_start();
     require_once "pdo.php";
 
-    //back to index on cancel click
+    //logging logic
+    if (!isset($_SESSION["name"])) {
+        die("ACCESS DENIED");
+    }
+    
     if (isset($_POST['cancel'])) {
         header("Location: index.php");
         return;
