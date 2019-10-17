@@ -27,7 +27,7 @@
             }
 
             //dislplays log in or logout depending on current sessions as well as table info
-            if (!$_SESSION["name"]) {
+            if (!$_SESSION['name']) {
                 echo('<a href="login.php">Please log in</a>');
                 if (count($rows) > 0) {
                     echo('<div>');

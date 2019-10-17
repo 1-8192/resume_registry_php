@@ -56,6 +56,29 @@
         <?php require_once 'bootstrap_styling.php' ?>
     </head>
     <body>
+        <script>
+            //JS validation for input fields
+            function doValidate() {
+                console.log('Validating...');
+                const em = document.getElementById('email').value;
+                const pw = document.getElementById('pass').value;
+                try {
+                    console.log("Validating pw="+pw);
+                    if (em == null || em == "" || pw == null || pw == "") {
+                        alert("Both fields must be filled out");
+                        return false;
+                    }
+                    if (em.indexOf('@') == -1) {
+                        alert("Invalid email address");
+                        return false;
+                    }
+                    return true;
+                    } catch(e) {
+                        return false;
+                    }
+                return false;
+            }
+        </script>
         <h1>Please Log In</h1>
         <?php 
             //checking to see if there is an error in session and if there is displays it and unsets the error for another try
@@ -69,7 +92,7 @@
             <input type="text" name="email" id="email">
             <label for="pass">Password</label>
             <input type="text" name="pass" id="pass">
-            <input type="submit" value="Log In">
+            <input type="submit" onclick="return doValidate();" value="Log In">
             <input type="submit" name="cancel" value="Cancel">
         </form>
     </body>
