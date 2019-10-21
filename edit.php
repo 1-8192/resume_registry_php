@@ -66,6 +66,7 @@
     <head>
         <title>Alessandro Allegranzi - Resume Registry</title>
         <?php require_once 'bootstrap_styling.php' ?>
+        <script src="https://code.jquery.com/jquery-3.2.1.js" integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE=" crossorigin="anonymous"></script>
     </head>
     <body>
         <h1> Adding Profile for <?php echo(htmlentities($_SESSION['name'])) ?> </h1>
