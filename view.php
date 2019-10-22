@@ -25,6 +25,16 @@
          $summary = htmlentities($row['summary']);
          $profile_id = htmlentities($row['profile_id']);
      }
+
+     $stmt = $pdo->prepare("SELECT * FROM Position WHERE profile_id = :id");
+     $stmt->execute(array(":id" => $_GET['profile_id']));
+     $count = 0;
+     $position_row = [];
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+         $position_row[$count] = $row;
+         $count++;
+     }
+    //  $position_row = $stmt->fetch(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -41,6 +51,18 @@
         <p>Email: <?php echo $email ?></p>
         <p>Headline: <?php echo $headline ?></p>
         <p>Summary: <?php echo $summary ?></p>
+        <?php 
+            if (count($position_row) > 0) {
+                echo('<ul>');
+                
+                    for($i=0; $i<count($position_row); $i++) {
+                        $year = htmlentities($position_row[$i]['year']);
+                        $desc = htmlentities($position_row[$i]['description']);
+
+                        echo('<li>'.$year .': ' .$desc .'</li>');
+                    } 
+            }
+        ?>
         <a href="index.php">Done</a>
     </div>
     </body>
