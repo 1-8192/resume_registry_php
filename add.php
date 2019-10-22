@@ -70,6 +70,32 @@
             <input type="text" name="headline" size="80"></br>
             <label for="summary">Summary:</label>
             <textarea name="summary" rows="8" cols="80"></textarea></br>
+            <p>Position:</p>
+            <input type="submit" id="position-add" value="+">
+            <div id="positions"></div>
+            <script>
+                countPos = 0;
+
+                $(document).ready(function() {
+                    window.console && console.log('Document ready called');
+                    $('#position-add').click(function(event) {
+                        event.preventDefault();
+                        if (countPos >= 9) {
+                            alert('Maximum of nine entreis exceeded');
+                            return;
+                        }
+                        countPos++;
+                        window.console && console.log("Adding position " + countPos);
+                        $('#positions').append(
+                            '<div id="position'+countPos+'"> \
+                            <p>Year: <input type="text" name="year'+countPos+'" value=""> \
+                            <input type="button" value="-" \
+                                onClick="$(\'#position'+countPos+'\').remove();return false;"></p>\
+                                <textarea name="desc'+countPos+'" rows="8" cols="88"></textarea>\
+                                </div>');
+                    });
+                });
+            </script>
             <input type="submit" value="Add">
             <input type="submit" name="cancel" value="Cancel">
         </form>
