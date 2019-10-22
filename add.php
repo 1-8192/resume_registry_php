@@ -76,16 +76,22 @@
 
           $profile_id = $pdo->lastInsertId();
 
-          $stmt = $pdo->prepare('INSERT INTO Position (profile_id, rank, year, description) VALUES (:pid, :rank, :year, :desc)');
-          $stmt->execute(array(
+          $rank=1;
+
+          for ($i=1; $i<=9; $i++) {
+            if ( ! isset($_POST['year'.$i]) ) continue;
+            if ( ! isset($_POST['desc'.$i]) ) continue;
+
+            $stmt = $pdo->prepare('INSERT INTO Position (profile_id, rank, year, description) VALUES (:pid, :rank, :year, :desc)');
+            $stmt->execute(array(
               ':pid' => $profile_id,
               ':rank' => $rank,
-              ':year' => $year,
-              ':desc' => $desc
-          ));
+              ':year' => $_POST['year'.$i],
+              ':desc' => $_POST['desc'.$i]
+            ));
+            $rank++;
+          }
 
-          $rank++;
-          
           $_SESSION['success'] = "Profile added";
           header("Location: index.php");
           return;
