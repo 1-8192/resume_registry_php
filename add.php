@@ -12,18 +12,55 @@
         return;
     }
 
+    //Validate profile fieilds
+    function validateProfile() {
+        if (strlen($_POST['first_name']) < 1 || strlen($_POST['last_name']) < 1 || strlen($_POST['email']) < 1 || strlen($_POST['headline']) < 1 || strlen($_POST['summary']) < 1) {
+            return "All fields are required";
+        } else if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
+            return "Email address must contain @";
+        }
+        return true;
+    }
+
+    //Validate position fields
+    function validatePos() {
+        for ($i=1; $i<=9; $i++) {
+            if (!isset($_POST['year'.$i])) continue;
+            if (!isset($POST['desc'.$i])) continue;
+
+            $year = $_POST['year'.$i];
+            $desc = $_POST['desc'.$i];
+
+            if (strlen($year) == 0 || strlen($desc) == 0 ) {
+                return 'All fields are required';
+            }
+
+            if (!is_numeric($year)) {
+                return "Position year must be numeric";
+            }
+        }
+        return true;
+    }
+
     //PHP validation for input fields
     if (isset($_POST['first_name']) && isset($_POST['last_name']) && isset($_POST['email']) && isset($_POST['headline']) && isset($_POST['summary'])) {
-        if (strlen($_POST['first_name']) < 1 || strlen($_POST['last_name']) < 1 || strlen($_POST['email']) < 1 || strlen($_POST['headline']) < 1 || strlen($_POST['summary']) < 1) {
-            $_SESSION['error'] = "All fields are required";
+       
+        //checking form data
+        $msg = validateProfile();
+        if (is_string($msg)) {
+            $_SESSION['error'] = $msg;
             header("Location: add.php");
             return;
-        } else if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
-            $_SESSION['error'] = "Email address must contain @";
+        }
+
+        $msg = validatePos();
+        if (is_string($msg)) {
+            $_SESSION['error'] = $msg;
             header("Location: add.php");
             return;
-        } else {
-            //Posting new user to DB
+        }
+
+            //Posting new user to DB if form data is OK
             $stmt = $pdo->prepare('INSERT INTO Profile
             (user_id, first_name, last_name, email, headline, summary)
             VALUES ( :uid, :fn, :ln, :em, :he, :su)');
@@ -36,11 +73,24 @@
             ':he' => $_POST['headline'],
             ':su' => $_POST['summary'])
           );
+
+          $profile_id = $pdo->lastInsertId();
+
+          $stmt = $pdo->prepare('INSERT INTO Position (profile_id, rank, year, description) VALUES (:pid, :rank, :year, :desc)');
+          $stmt->execute(array(
+              ':pid' => $profile_id,
+              ':rank' => $rank,
+              ':year' => $year,
+              ':desc' => $desc
+          ));
+
+          $rank++;
+          
           $_SESSION['success'] = "Profile added";
           header("Location: index.php");
           return;
-        }
     }
+
 ?>
 
 <!DOCTYPE html>
@@ -74,6 +124,7 @@
             <input type="submit" id="position-add" value="+">
             <div id="positions"></div>
             <script>
+                //jquery logic for adding up to 9 position fields to form
                 countPos = 0;
 
                 $(document).ready(function() {
@@ -81,7 +132,7 @@
                     $('#position-add').click(function(event) {
                         event.preventDefault();
                         if (countPos >= 9) {
-                            alert('Maximum of nine entreis exceeded');
+                            alert('Maximum of nine entries exceeded');
                             return;
                         }
                         countPos++;
