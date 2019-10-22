@@ -34,7 +34,6 @@
          $position_row[$count] = $row;
          $count++;
      }
-    //  $position_row = $stmt->fetch(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
