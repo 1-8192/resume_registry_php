@@ -14,5 +14,6 @@
         <?php require_once 'bootstrap_styling.php' ?>
     </head>
     <body>
+        <h1>Profile information</h1>
     </body>
 </html>

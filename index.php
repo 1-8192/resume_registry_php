@@ -57,7 +57,7 @@
                         echo('</tr>');
                         foreach($rows as $row) {
                             echo'<tr><td>';
-                            echo($row['first_name']." ". $row['last_name']);
+                            echo ('<a href="view.php?profile_id='.$row['profile_id'].'"> '.$row['first_name'].' '.$row['last_name'].'</a>');
                             echo '</td><td>';
                             echo($row["headline"]);
                             echo '</td><td>';
