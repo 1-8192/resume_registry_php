@@ -161,9 +161,19 @@
             <p>Position:</p>
             <input type="submit" id="position-add" value="+">
             <div id="positions"></div>
+            <?php
+                if (count($position_row) > 0) {
+                        for($i=0; $i<count($position_row); $i++) {
+                            $year = htmlentities($position_row[$i]['year']);
+                            $desc = htmlentities($position_row[$i]['description']);
+    
+                            echo('<div id="position'.$i"><p>Year: <input>'.$year .': ' .$desc .'</div>');
+                        } 
+                }
+            ?>
             <script>
                 //jquery logic for adding up to 9 position fields to form
-                countPos = 0;
+                countPos = $("#positions > div");
 
                 $(document).ready(function() {
                     window.console && console.log('Document ready called');
