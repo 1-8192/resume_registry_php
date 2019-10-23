@@ -49,21 +49,20 @@
         $msg = validateProfile();
         if (is_string($msg)) {
             $_SESSION['error'] = $msg;
-            header("Location: edit.php?profile_id=" .$_REQUEST["profile_id"]);
+            header("Location: edit.php?profile_id=" .$_POST["profile_id"]);
             return;
         }
 
         $msg = validatePos();
         if (is_string($msg)) {
             $_SESSION['error'] = $msg;
-            header("Location: edit.php?profile_id=" .$_REQUEST["profile_id"]);
+            header("Location: edit.php?profile_id=" .$_POST["profile_id"]);
             return;
         }
 
             //Posting new user to DB if form data is OK
-            $stmt = $pdo->prepare('INSERT INTO Profile
-            (user_id, first_name, last_name, email, headline, summary)
-            VALUES ( :uid, :fn, :ln, :em, :he, :su)');
+            $stmt = $pdo->prepare('UPDATE Profile
+            SET user_id = :uid, first_name = :fn, last_name = :ln, email = :em, headline = :he, summary = :su WHERE profile_id = :pid');
           
             $stmt->execute(array(
             ':uid' => $_SESSION['user_id'],
@@ -71,14 +70,15 @@
             ':ln' => $_POST['last_name'],
             ':em' => $_POST['email'],
             ':he' => $_POST['headline'],
-            ':su' => $_POST['summary'])
-          );
+            ':su' => $_POST['summary'],
+            ':pid' => htmlentities($_POST['profile_id'])
+          ));
 
-          $profile_id = $pdo->lastInsertId();
+          $profile_id = $_POST["profile_id"];
 
           //clear out old position values
           $stmt = $pdo->prepare('DELETE FROM Position WHERE profile_id=:pid');
-          $stmt->execute(array( ':pid' => $_REQUEST['profile_id']));
+          $stmt->execute(array( ':pid' => $profile_id));
 
           $rank=1;
 
@@ -96,7 +96,7 @@
             $rank++;
           }
 
-          $_SESSION['success'] = "Profile added";
+          $_SESSION['success'] = "Profile saved";
           header("Location: index.php");
           return;
     }
@@ -169,13 +169,14 @@
                             
                             $x= $i+1;
                             $pos = "position$x";
+                            $pos_click = "#position$x";
                             $pos_year = "year$x";
                             $pos_desc = "desc$x";
 
                             echo('<div id="'.$pos.'">
                             <p>Year: <input type="text" name="'.$pos_year.'" value="'.$year.'">
                             <input type="button" value="-" 
-                                onClick="$("#'.$pos.'").remove();return false;"></p>
+                                onClick="$(\''.$pos_click.'\').remove();return false;"></p>
                                 <textarea name="'.$pos_desc.'" rows="8" cols="88">"'.$desc.'"</textarea>
                                 </div>'); 
                         } 
