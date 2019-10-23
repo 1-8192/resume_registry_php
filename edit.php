@@ -160,16 +160,17 @@
             <input type="hidden" name="profile_id" value="<?= $profile_id?>">
             <p>Position:</p>
             <input type="submit" id="position-add" value="+">
-            <div id="positions"></div>
+            <div id="positions">
             <?php
                 if (count($position_row) > 0) {
                         for($i=0; $i<count($position_row); $i++) {
                             $year = htmlentities($position_row[$i]['year']);
                             $desc = htmlentities($position_row[$i]['description']);
                             
-                            $pos = "position'.($i+1)'";
-                            $pos_year = "year'.($i+1)'";
-                            $pos_desc = "desc'.($i+1)'";
+                            $x= $i+1;
+                            $pos = "position$x";
+                            $pos_year = "year$x";
+                            $pos_desc = "desc$x";
 
                             echo('<div id="'.$pos.'">
                             <p>Year: <input type="text" name="'.$pos_year.'" value="'.$year.'">
@@ -180,9 +181,10 @@
                         } 
                 }
             ?>
+            </div>
             <script>
                 //jquery logic for adding up to 9 position fields to form
-                countPos = $("#positions > div");
+                countPos = $("#positions").children().length;
 
                 $(document).ready(function() {
                     window.console && console.log('Document ready called');
