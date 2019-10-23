@@ -49,14 +49,14 @@
         $msg = validateProfile();
         if (is_string($msg)) {
             $_SESSION['error'] = $msg;
-            header("Location: add.php");
+            header("Location: edit.php?profile_id=" .$_REQUEST["profile_id"]);
             return;
         }
 
         $msg = validatePos();
         if (is_string($msg)) {
             $_SESSION['error'] = $msg;
-            header("Location: add.php");
+            header("Location: edit.php?profile_id=" .$_REQUEST["profile_id"]);
             return;
         }
 
@@ -166,8 +166,17 @@
                         for($i=0; $i<count($position_row); $i++) {
                             $year = htmlentities($position_row[$i]['year']);
                             $desc = htmlentities($position_row[$i]['description']);
-    
-                            echo('<div id="position'.$i"><p>Year: <input>'.$year .': ' .$desc .'</div>');
+                            
+                            $pos = "position'.($i+1)'";
+                            $pos_year = "year'.($i+1)'";
+                            $pos_desc = "desc'.($i+1)'";
+
+                            echo('<div id="'.$pos.'">
+                            <p>Year: <input type="text" name="'.$pos_year.'" value="'.$year.'">
+                            <input type="button" value="-" 
+                                onClick="$("#'.$pos.'").remove();return false;"></p>
+                                <textarea name="'.$pos_desc.'" rows="8" cols="88">"'.$desc.'"</textarea>
+                                </div>'); 
                         } 
                 }
             ?>
