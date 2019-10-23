@@ -177,7 +177,7 @@
                             <p>Year: <input type="text" name="'.$pos_year.'" value="'.$year.'">
                             <input type="button" value="-" 
                                 onClick="$(\''.$pos_click.'\').remove();return false;"></p>
-                                <textarea name="'.$pos_desc.'" rows="8" cols="88">"'.$desc.'"</textarea>
+                                <textarea name="'.$pos_desc.'" rows="8" cols="88">'.$desc.'</textarea>
                                 </div>'); 
                         } 
                 }
