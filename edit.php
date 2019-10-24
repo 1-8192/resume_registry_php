@@ -42,6 +42,26 @@
         return true;
       }
 
+      //validate education fields
+      function validateEdu() {
+        for($i=1; $i<=9; $i++) {
+            if ( ! isset($_POST['edu_year'.$i]) ) continue;
+            if ( ! isset($_POST['edu_school'.$i]) ) continue;
+        
+            $year = $_POST['edu_year'.$i];
+            $desc = $_POST['edu_school'.$i];
+        
+            if ( strlen($year) == 0 || strlen($desc) == 0 ) {
+              return "All fields are required";
+            }
+        
+            if ( ! is_numeric($year) ) {
+              return "Position year must be numeric";
+            }
+          }
+          return true;
+    }
+
     //PHP validation for input fields
     if (isset($_POST['first_name']) && isset($_POST['last_name']) && isset($_POST['email']) && isset($_POST['headline']) && isset($_POST['summary'])) {
        
@@ -54,6 +74,14 @@
         }
 
         $msg = validatePos();
+        if (is_string($msg)) {
+            $_SESSION['error'] = $msg;
+            header("Location: edit.php?profile_id=" .$_POST["profile_id"]);
+            return;
+        }
+
+        //validating education
+        $msg = validateEdu();
         if (is_string($msg)) {
             $_SESSION['error'] = $msg;
             header("Location: edit.php?profile_id=" .$_POST["profile_id"]);
@@ -96,6 +124,45 @@
             $rank++;
           }
 
+          //clear out old education values
+          $stmt = $pdo->prepare('DELETE FROM Education WHERE profile_id=:pid');
+          $stmt->execute(array( ':pid' => $profile_id));
+
+          //Posting education
+          $rank = 1;
+
+          for ($i=1; $i<=9; $i++) {
+              if (! isset($_POST['edu_year'.$i]) ) continue;
+              if (! isset($_POST['edu_school'.$i]) ) continue;
+              
+              $year = $_POST['edu_year'.$i];
+              $school = $_POST['edu_school'.$i];
+              
+              //check to see if school already exists
+              $institution_id = false;
+              $stmt = $pdo->prepare('SELECT institution_id FROM Institution WHERE name = :name');
+              $stmt->execute(array(':name' => $school));
+              $row = $stmt->fetch(PDO::FETCH_ASSOC);
+              if ( $row !== false ) $institution_id = $row['institution_id'];
+
+              //if no institution was found insert new one
+              if ($institution_id === false) {
+                  $stmt = $pdo->prepare('INSERT INTO Institution (name) VALUES (:name)');
+                  $stmt->execute(array(':name' => $school));
+                  $institution_id = $pdo->lastInsertId();
+              }
+
+              //Insert with existing school
+              $stmt= $pdo->prepare('INSERT INTO Education (profile_id, rank, year, institution_id) VALUES (:pid, :rank, :year, :iid)');
+              $stmt->execute(array(
+                  ':pid' => $profile_id,
+                  ':rank' => $rank,
+                  ':year' => $year,
+                  ':iid' => $institution_id
+              ));
+              $rank++;
+          }
+
           $_SESSION['success'] = "Profile saved";
           header("Location: index.php");
           return;
@@ -128,6 +195,11 @@
         $position_row[$count] = $row;
         $count++;
     }
+
+    //education data
+    $stmt = $pdo->prepare("SELECT year, name FROM Education JOIN Institution ON Education.institution_id = Institution.institution_id WHERE profile_id = :prof ORDER BY rank");
+     $stmt->execute(array(":prof" => $_GET['profile_id']));
+     $education_row = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -199,6 +271,56 @@
                             <input type="button" value="-" \
                                 onClick="$(\'#position'+countPos+'\').remove();return false;"></p>\
                                 <textarea name="desc'+countPos+'" rows="8" cols="88"></textarea>\
+                                </div>');
+                    });
+                });
+            </script>
+            <p>Education:</p>
+            <input type="submit" id="education-add" value="+">
+            <div id="educations">
+            <?php
+                if (count($education_row) > 0) {
+                        for($i=0; $i<count($education_row); $i++) {
+                            $year = htmlentities($education_row[$i]['year']);
+                            $name = htmlentities($education_row[$i]['name']);
+                            
+                            $x= $i+1;
+                            $edu = "education$x";
+                            $edu_click = "#educations$x";
+                            $edu_year = "edu_year$x";
+                            $edu_school = "edu_school$x";
+
+                            echo('<div id="'.$edu.'">
+                            <p>Year: <input type="text" name="'.$edu_year.'" value="'.$year.'">
+                            <input type="button" value="-" 
+                                onClick="$(\''.$edu_click.'\').remove();return false;"></p>
+                                <p>School: <input type="text" name="'.$edu_school.'" value="'.$name.'" size="80"></p>
+                                </div>'); 
+                        } 
+                }
+            ?>
+            </div>
+            <script>
+                countEdu = 0;
+
+                $(document).ready(function() {
+                    window.console && console.log('Document ready called');
+
+                    $('#education-add').click(function(event) {
+                        event.preventDefault();
+                        if (countEdu >= 9) {
+                            alert('Maximum of nine entries exceeded');
+                            return;
+                        }
+                        countEdu++;
+
+                        window.console && console.log("Adding education " + countEdu);
+                        $('#educations').append(
+                            '<div id="education'+countEdu+'"> \
+                            <p>Year: <input type="text" name="edu_year'+countEdu+'" value=""> \
+                            <input type="button" value="-" \
+                                onClick="$(\'#education'+countEdu+'\').remove();return false;"></p>\
+                                <p>School: <input type="text" name="edu_school'+countEdu+'" size="80"></p>\
                                 </div>');
                     });
                 });
