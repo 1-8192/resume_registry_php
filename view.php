@@ -35,7 +35,7 @@
          $count++;
      }
 
-     $stmt = $pdo->prepare("SELECT year, name FROM Education JOIN Institution ON Education.institution_id WHERE profile_id = :prof ORDER BY rank");
+     $stmt = $pdo->prepare("SELECT year, name FROM Education JOIN Institution ON Education.institution_id = Institution.institution_id WHERE profile_id = :prof ORDER BY rank");
      $stmt->execute(array(":prof" => $_GET['profile_id']));
      $education_row = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
