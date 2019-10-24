@@ -34,6 +34,10 @@
          $position_row[$count] = $row;
          $count++;
      }
+
+     $stmt = $pdo->prepare("SELECT year, name FROM Education JOIN Institution ON Education.institution_id WHERE profile_id = :prof ORDER BY rank");
+     $stmt->execute(array(":prof" => $_GET['profile_id']));
+     $education_row = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -49,7 +53,8 @@
         <p>Summary: <?php echo $summary ?></p>
         <?php 
             if (count($position_row) > 0) {
-                echo('<ul>');
+
+                echo('<p>Positions:</p><ul>');
                 
                     for($i=0; $i<count($position_row); $i++) {
                         $year = htmlentities($position_row[$i]['year']);
@@ -57,6 +62,18 @@
 
                         echo('<li>'.$year .': ' .$desc .'</li>');
                     } 
+            }
+
+            if (count($education_row) > 0) {
+
+                echo('<p>Education:</p><ul>');
+
+                for($i=0; $i<count($education_row); $i++) {
+                    $year = htmlentities($education_row[$i]['year']);
+                    $name = htmlentities($education_row[$i]['name']);
+                    
+                    echo('<li>'.$year.': ' .$name .'</li>');
+                }   
             }
         ?>
         <a href="index.php">Done</a>
