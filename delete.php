@@ -34,10 +34,7 @@
 
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <title>Alessandro Allegranzi - Resume Registry</title>
-        <?php require_once 'bootstrap_styling.php' ?>
-    </head>
+    <?php require_once "head.php" ?>
     <body>
         <h1>Deleting Profile</h1>
         <p>First Name: <?= $row['first_name'] ?></p>

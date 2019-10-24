@@ -9,10 +9,7 @@
 
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <title>Alessandro Allegranzi - Resume Registry</title>
-        <?php require_once 'bootstrap_styling.php' ?>
-    </head>
+    <?php require_once "head.php" ?>
     <body>
         <h1>Alessandro Allegranzi's Resume Registry</h1>
         <?php
