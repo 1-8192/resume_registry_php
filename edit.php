@@ -251,6 +251,31 @@
                 }
             ?>
             </div>
+            <p>Education:</p>
+            <input type="submit" id="educations-add" value="+">
+            <div id="educations">
+                <?php 
+                    if (count($education_row) > 0) {
+                        for($i=0; $i<count($education_row); $i++) {
+                            $year = htmlentities($education_row[$i]['year']);
+                            $name = htmlentities($education_row[$i]['name']);
+                            
+                            $x= $i+1;
+                            $edu = "education$x";
+                            $edu_click = "#educations$x";
+                            $edu_year = "edu_year$x";
+                            $edu_school = "edu_school$x";
+    
+                            echo('<div id="'.$edu.'">
+                            <p>Year: <input type="text" name="'.$edu_year.'" value="'.$year.'">
+                            <input type="button" value="-" 
+                                onClick="$(\''.$edu_click.'\').remove();return false;"></p>
+                                <p>School: <input type="text" class ="school" name="'.$edu_school.'" value="'.$name.'" size="80"></p>
+                                </div>'); 
+                        } 
+                }
+                ?>
+            </div>
             <script>
                 //jquery logic for adding up to 9 position fields to form
                 countPos = $("#positions").children().length;
@@ -274,39 +299,10 @@
                                 </div>');
                     });
                 });
-            </script>
-            <p>Education:</p>
-            <input type="submit" id="education-add" value="+">
-            <div id="educations">
-            <?php
-                if (count($education_row) > 0) {
-                        for($i=0; $i<count($education_row); $i++) {
-                            $year = htmlentities($education_row[$i]['year']);
-                            $name = htmlentities($education_row[$i]['name']);
-                            
-                            $x= $i+1;
-                            $edu = "education$x";
-                            $edu_click = "#educations$x";
-                            $edu_year = "edu_year$x";
-                            $edu_school = "edu_school$x";
+           
+                countEdu = ('#educations').children().length;
 
-                            echo('<div id="'.$edu.'">
-                            <p>Year: <input type="text" name="'.$edu_year.'" value="'.$year.'">
-                            <input type="button" value="-" 
-                                onClick="$(\''.$edu_click.'\').remove();return false;"></p>
-                                <p>School: <input type="text" name="'.$edu_school.'" value="'.$name.'" size="80"></p>
-                                </div>'); 
-                        } 
-                }
-            ?>
-            </div>
-            <script>
-                countEdu = 0;
-
-                $(document).ready(function() {
-                    window.console && console.log('Document ready called');
-
-                    $('#education-add').click(function(event) {
+                    $('#educations-add').click(function(event) {
                         event.preventDefault();
                         if (countEdu >= 9) {
                             alert('Maximum of nine entries exceeded');
@@ -323,7 +319,6 @@
                                 <p>School: <input type="text" name="edu_school'+countEdu+'" size="80"></p>\
                                 </div>');
                     });
-                });
             </script>
             <input type="submit" value="Save">
             <input type="submit" name="cancel" value="Cancel">
