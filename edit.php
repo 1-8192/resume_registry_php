@@ -298,7 +298,6 @@
                                 <textarea name="desc'+countPos+'" rows="8" cols="88"></textarea>\
                                 </div>');
                     });
-                });
            
                 countEdu = ('#educations').children().length;
 
@@ -319,6 +318,7 @@
                                 <p>School: <input type="text" name="edu_school'+countEdu+'" size="80"></p>\
                                 </div>');
                     });
+                });
             </script>
             <input type="submit" value="Save">
             <input type="submit" name="cancel" value="Cancel">

@@ -231,8 +231,9 @@
                             <p>Year: <input type="text" name="edu_year'+countEdu+'" value=""> \
                             <input type="button" value="-" \
                                 onClick="$(\'#education'+countEdu+'\').remove();return false;"></p>\
-                                <p>School: <input type="text" name="edu_school'+countEdu+'" size="80"></p>\
+                                <p>School: <input type="text" class="school" name="edu_school'+countEdu+'" size="80"></p>\
                                 </div>');
+                                $('.school').autocomplete({ source: "school.php" });
                     });
                 });
             </script>
