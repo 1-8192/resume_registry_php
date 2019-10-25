@@ -319,6 +319,8 @@
                                 </div>');
                                 $('.school').autocomplete({ source: "school.php" });
                     });
+
+                    $('.school').autocomplete({ source: "school.php" });
                 });
             </script>
             <input type="submit" value="Save">
