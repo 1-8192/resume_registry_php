@@ -252,7 +252,7 @@
             ?>
             </div>
             <p>Education:</p>
-            <input type="submit" id="educations-add" value="+">
+            <input type="submit" id="education-add" value="+">
             <div id="educations">
                 <?php 
                     if (count($education_row) > 0) {
@@ -262,7 +262,7 @@
                             
                             $x= $i+1;
                             $edu = "education$x";
-                            $edu_click = "#educations$x";
+                            $edu_click = "#education$x";
                             $edu_year = "edu_year$x";
                             $edu_school = "edu_school$x";
     
@@ -299,9 +299,9 @@
                                 </div>');
                     });
            
-                countEdu = ('#educations').children().length;
+                    countEdu = $("#educations").children().length;
 
-                    $('#educations-add').click(function(event) {
+                    $("#education-add").click(function(event) {
                         event.preventDefault();
                         if (countEdu >= 9) {
                             alert('Maximum of nine entries exceeded');
@@ -317,6 +317,7 @@
                                 onClick="$(\'#education'+countEdu+'\').remove();return false;"></p>\
                                 <p>School: <input type="text" name="edu_school'+countEdu+'" size="80"></p>\
                                 </div>');
+                                $('.school').autocomplete({ source: "school.php" });
                     });
                 });
             </script>
